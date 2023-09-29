@@ -1,22 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <malloc.h>
-#include <stdlib.h>
-enum parse_state_t {
-  ps_scheme,
-  ps_domain,
-  ps_port,
-  ps_tld,
-  ps_error,
-  ps_okay,
-};
-
-struct parsed_host {
-  size_t len;
-  void* name;
-  unsigned short port;
-};
+#include "parseip.h"
 
 int extract_hostname(const char* name,const size_t nameSize,struct parsed_host* inParsed){
   const char* ptr = name;
@@ -94,25 +76,4 @@ int extract_hostname(const char* name,const size_t nameSize,struct parsed_host* 
     return ps_okay;
   }
   return ps_error;
-}
-
-int main(int argc,char** argv){
-  if(argc < 2){
-    return 1;
-  }
-  struct parsed_host hostInfo;
-  memset((void*)&hostInfo,0,sizeof(struct parsed_host));
-  int n = extract_hostname(argv[1],strlen(argv[1]),&hostInfo);
-  switch(n){
-    case ps_error:
-    fprintf(stderr,"Invalid hostname detected\n");
-    return 1;
-    case ps_okay:
-    printf("host: '%s'\nport: %d\nlen: %zu\n",(char*)hostInfo.name,hostInfo.port,hostInfo.len);
-    break;
-    default:
-    printf("idk\n");
-    break;
-  }
-  return 0;
 }
