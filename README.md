@@ -4,7 +4,7 @@ A simple host parser written in C
 
 # How to use
 
-```
+```c
 #include "parseip.h"
 
 //
