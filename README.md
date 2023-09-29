@@ -2,7 +2,51 @@
 
 A simple host parser written in C
 
-# How to use
+# The API
+```c
+int extract_hostname(
+  const char* name,
+  const size_t nameSize,
+  struct parsed_host* inParsed
+  );
+```
+## `name`
+A character buffer pointing to the url/host to parse
+
+## `nameSize`
+An unsigned integer representing the size of the `name` buffer
+
+## `inParsed`
+A pointer to a `parsed_host` struct. 
+The results of `extract_hostname` will be placed in this pointer.
+
+## return value
+`extract_hostname` will return one of two possible values:
+- `ps_okay`
+- `ps_error`
+
+### `ps_okay`
+If `ps_okay` is returned, the `parsed_host.name` char buffer points to an allocated string buffer. This buffer must be freed by the calling function using `free(ptr->name)`.
+
+### `ps_error`
+If `ps_error` is returned, the `parsed_host.name` char buffer will *NOT* contain an allocated string buffer. Attempting to call `free` on this buffer is undefined behavior.
+
+
+# `struct parsed_host`
+## `name`
+A `char*` buffer pointing to the host name. This must be freed by the calling function.
+
+## `port`
+An `unsigned short` representing the port number (if any).
+If a port was specified in a URL such as:
+`http://foobar.com:8181`, then upon successful parse, `.port` will be `8181`
+
+## `len`
+An unsigned int representing the size of the `name` buffer.
+
+
+
+# Example
 
 ```c
 #include "parseip.h"
@@ -55,3 +99,5 @@ int main(int argc,char** argv){
 }
 
 ```
+
+
